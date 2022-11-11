@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hmily-admin.fullname" . }}
+  labels:
+    {{- include "hmily-admin.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hmily-admin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "hmily-admin.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hmily-admin.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{/* check if database type is valid */}}
+      {{- $dataSourceTypeValid := has .Values.dataSource.active (list "mysql") -}}
+      {{- if not $dataSourceTypeValid -}}{{- required "Invalid `.dataSource.active`. Must be one of 'mysql'" -}}{{- end}}
+      {{- if eq .Values.dataSource.active "mysql"}}
+      {{- $mysqlConnectorVersion := (required "once `dataSource.active` is set to 'mysql', `dataSource.mysql.connectorVersion` should not be empty" .Values.dataSource.mysql.connectorVersion)}}
+      {{- $mysqlJarName := (print "mysql-connector-java-" $mysqlConnectorVersion ".jar") -}}
+      initContainers:
+        - name: download-mysql-jar
+          image: busybox:1.35.0
+          command:
+            - "sh"
+            - "-c"
+            - "wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/{{$mysqlJarName}};
+                    wget https://repo1.maven.org/maven2/mysql/mysql-connector-java/{{$mysqlConnectorVersion}}/{{$mysqlJarName}}.md5;
+                    if [ $(md5sum {{$mysqlJarName}} | cut -d ' ' -f1) = $(cat {{$mysqlJarName}}.md5) ];
+                    then echo success;
+                    else echo failed;exit 1;fi;mv /{{$mysqlJarName}} /opt/hmily-admin/ext-lib/mysql-connector.jar"
+          volumeMounts:
+            - name: mysql-connector-volume
+              mountPath: /opt/hmily-admin/ext-lib
+          {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8888
+              protocol: TCP
+          volumeMounts:
+            - name: hmily-admin-config
+              mountPath: /opt/hmily-admin/conf/application.yml
+              subPath: application.yml
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: hmily-admin-config
+              mountPath: /opt/hmily-admin/conf/application.yml
+              subPath: application.yml
+          {{- if eq .Values.dataSource.active "mysql" }}
+            - name: mysql-connector-volume
+              mountPath: /opt/hmily-admin/ext-lib
+            - name: hmily-admin-config
+              mountPath: /opt/hmily-admin/conf/application-mysql.yml
+              subPath: application-mysql.yml
+          {{- end}}
+      volumes:
+        {{- if eq .Values.dataSource.active "mysql" }}
+        - name: mysql-connector-volume
+          emptyDir: { }
+        {{- end }}
+        - name: hmily-admin-config
+          configMap:
+            name: {{ include "hmily-admin.fullname" . }}
+            items:
+              - key: application.yml
+                path: application.yml
+            {{- if eq .Values.dataSource.active "mysql" }}
+              - key: application-mysql.yml
+                path: application-mysql.yml
+            {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
