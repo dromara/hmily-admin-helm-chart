@@ -1,4 +1,4 @@
-# hmily-admin-helm
+# hmily-admin-helm-chart
 
 A helm chart for hmily-admin.
 

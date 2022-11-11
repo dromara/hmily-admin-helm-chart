@@ -21,7 +21,7 @@ jobs:
       - name: Update Helm Dependency
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
-          cd hmily-admin
+          cd charts/hmily-admin
           helm dependency update
           cd ../..
 
