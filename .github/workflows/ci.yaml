@@ -43,5 +43,5 @@ jobs:
         uses: ./.github/actions/kind-action
         if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
-        run: ct install --config ct.yaml
+#      - name: Run chart-testing (install)
+#        run: ct install --config ct.yaml
