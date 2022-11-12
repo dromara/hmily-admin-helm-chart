@@ -19,7 +19,7 @@ helm repo update
 修改以下命令并复制，执行：
 
 ```shell
-helm install hmily-admin dromara/hmily-admin -n=hmily --create-namespace \
+helm install hmily-admin hmily-admin/hmily-admin -n=hmily --create-namespace \
       --set dataSource.active=mysql \
       --set dataSource.mysql.ip=127.0.0.1 \
       --set dataSource.mysql.port=3306 \
@@ -33,11 +33,11 @@ helm install hmily-admin dromara/hmily-admin -n=hmily --create-namespace \
 ### 若需要大量修改配置信息，如何安装
 
 1. 下载完整 values.yaml
-* 最新 chart 版本：`helm show values dromara/hmily-admin > values.yaml`
-* 特定 chart 版本, 如 `0.1.0`: `helm show values dromara/hmily-admin --version=0.1.0 > values.yaml`
+* 最新 chart 版本：`helm show values hmily-admin/hmily-admin > values.yaml`
+* 特定 chart 版本, 如 `0.1.0`: `helm show values hmily-admin/hmily-admin --version=0.1.0 > values.yaml`
 2. 修改 values.yaml 文件
 3. 更改相应配置，使用 `-f values.yaml` 的格式执行 `helm install` 命令。
-   如：`helm install hmily-admin dromara/hmily-admin -n=hmily --create-namespace -f values.yaml`
+   如：`helm install hmily-admin hmily-admin/hmily-admin -n=hmily --create-namespace -f values.yaml`
 
 ## Values
 
