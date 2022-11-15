@@ -3,6 +3,24 @@ entries:
   hmily-admin:
   - apiVersion: v2
     appVersion: 1.0.2
+    created: "2022-11-15T08:31:55.609080725Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 1.x.x
+    description: A Helm chart for hmily-admin
+    digest: 29120a2c36381ebbf5778a3f5e77a9ba4c03a4b1ce6be8b26a602e89b52da844
+    icon: https://dromara.org/img/logo/hmily.png
+    maintainers:
+    - email: aflybird0@gmail.com
+      name: aFlyBird0
+    name: hmily-admin
+    type: application
+    urls:
+    - https://github.com/dromara/hmily-admin-helm-chart/releases/download/hmily-admin-0.1.4/hmily-admin-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 1.0.2
     created: "2022-11-12T04:07:22.587014831Z"
     dependencies:
     - name: common
@@ -37,4 +55,4 @@ entries:
     urls:
     - https://github.com/dromara/hmily-admin-helm-chart/releases/download/hmily-admin-0.1.2/hmily-admin-0.1.2.tgz
     version: 0.1.2
-generated: "2022-11-12T04:07:22.587148332Z"
+generated: "2022-11-15T08:31:55.609113525Z"
