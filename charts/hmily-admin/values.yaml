@@ -12,8 +12,10 @@ image:
 
 service:
   type: ClusterIP
-  # hmily admin port
-  port: 31888
+  # hmily admin port(k8s internal, typically used for load balancer)
+  port: 8888
+  # hmily admin port(if service.type is NodePort)
+  nodePort: 31888
 
 imagePullSecrets: []
 nameOverride: ""
