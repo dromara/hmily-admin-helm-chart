@@ -34,7 +34,6 @@ dataSource:
     # mysql5   : com.mysql.jdbc.Driver
     # mysql6-8 : com.mysql.cj.jdbc.Driver
     driverClass: com.mysql.cj.jdbc.Driver
-    connectorVersion: 8.0.23
 
 applicationConfig:
   server:

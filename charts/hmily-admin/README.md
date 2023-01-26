@@ -41,17 +41,20 @@ helm install hmily-admin hmily-admin/hmily-admin -n=hmily --create-namespace \
 
 ## Values
 
-| 配置项                                        | 类型    | 默认值                 | 描述                                                           |
-|----------------------------------------------|--------|-----------------------|---------------------------------------------------------------|
-| replicaCount                                 | int    | 1                     | 副本数量                                                       |
-| image.repository                             | string | "dromara/hmily-admin" | 镜像地址                                                       |
-| image.pullPolicy                             | string | "IfNotPresent"        | 镜像拉取策略                                                    |
-| image.tag                                    | string | "1.0.2"               | 镜像版本                                                       |
-| service.type                                 | string | "NodePort"            | Kubernetes Service 类型，支持 NodePort，ClusterIP，LoadBalancer |
-| service.port                                 | int    | 8888                  | Kubernetes Service 端口(K8s Service内部使用）                   |
-| service.nodePort                             | int    | 31888                 | hmily-admin 服务端口（需设置service.type 为 NodePort）           |
-| applicationConfig.server.servlet.contextPath | string | ""                    | hmily-admin contextPath                                       |
-| applicationConfig.hmily.admin.userName       | string | "admin"               | hmily-admin 默认用户名                                          |
-| applicationConfig.hmily.admin.password       | string | "admin"               | hmily-admin 默认密码                                           |
-
-
+| 配置项                                        | 类型    | 默认值                        | 描述                                                           |
+|----------------------------------------------|--------|------------------------------|---------------------------------------------------------------|
+| replicaCount                                 | int    | 1                            | 副本数量                                                       |
+| image.repository                             | string | "dromara/hmily-admin"        | 镜像地址                                                       |
+| image.pullPolicy                             | string | "IfNotPresent"               | 镜像拉取策略                                                    |
+| image.tag                                    | string | "1.0.2"                      | 镜像版本                                                       |
+| service.type                                 | string | "NodePort"                   | Kubernetes Service 类型，支持 NodePort，ClusterIP，LoadBalancer |
+| service.port                                 | int    | 8888                         | Kubernetes Service 端口(K8s Service内部使用）                   |
+| service.nodePort                             | int    | 31888                        | hmily-admin 服务端口（需设置service.type 为 NodePort）           |
+| applicationConfig.server.servlet.contextPath | string | ""                           | hmily-admin contextPath                                       |
+| applicationConfig.hmily.admin.userName       | string | "admin"                      | hmily-admin 默认用户名                                          |
+| applicationConfig.hmily.admin.password       | string | "admin"                      | hmily-admin 默认密码                                           |
+| dataSource.mysql.ip                          | string | `""`                         | 数据库IP                                                       |
+| dataSource.mysql.port                        | int    | `3306`                       | 数据库端口                                                      |
+| dataSource.mysql.username                    | string | `"root"`                     | 数据库用户名                                                    |
+| dataSource.mysql.password                    | string | `""`                         | 数据库密码                                                      |
+| dataSource.mysql.driverClass                 | string | `"com.mysql.cj.jdbc.Driver"` | MySQL driver class 名字                                        |
